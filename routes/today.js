@@ -47,7 +47,7 @@ router.get('/', async function (req, res, next) {
   const xml = await getData(url);
   const data = await parseXML(xml);
   var obj = createObject(data);
-  res.json(data);
+  res.json(createJson(obj));
 });
 
 
@@ -67,6 +67,23 @@ function createObject(json){
   return obj; //return the object
 }
 
+//write a function that will create a json from a javascript object
+
+function createJson(obj){
+  var json = {}; //create an empty object
+  json.name = obj.name; //set the name property to the name of the object
+  json.numOutputs = obj.numOutputs; //set the numOutputs property to the number of outputs
+  json.outputs = obj.outputs; //set the outputs property to an array of the outputs
+  json.data = []; //create an empty array
+  obj.data.forEach(function(item){ //loop through the data array
+    var data = {}; //create an empty object
+    data.time = moment(item.time).format("YYYY-MM-DD HH:mm:ss"); //set the time property to the time of the item
+    data.value = item.value; //set the value property to the value of the item
+    data.value2 = item.value2; //set the value2 property to the value2 of the item
+    json.data.push(data); //push the data object to the data array
+  });
+  return json; //return the json
+}
 
 module.exports = router;
 
